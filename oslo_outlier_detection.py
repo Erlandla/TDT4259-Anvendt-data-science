@@ -5,9 +5,9 @@ from matplotlib import pyplot as plt
 data = pd.read_csv("consumption_temp.csv")
 
 data = data[data["location"] == "oslo"]
+# Reset the indexing after removing all non-oslo locations
 data.reset_index(inplace=True)
 data = data.drop(["index"], axis=1)
-print(data)
 
 column = data["consumption"]
 
