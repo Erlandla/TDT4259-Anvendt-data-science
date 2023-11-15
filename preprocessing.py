@@ -23,7 +23,8 @@ def preprocess(df):
     df["temperature"] = bma.moving_average(df["temperature"], 12)
     df["prev_consumption"] = df["consumption"].shift(168)
     df.dropna(how='any', axis=0, inplace=True)
-    df["consumption2"] = bma.moving_average(df["consumption"], 3)
+    # Tror kanskje ikke det er lov å bruke denne
+    # df["consumption2"] = bma.moving_average(df["consumption"], 3)
 
 
     return df
