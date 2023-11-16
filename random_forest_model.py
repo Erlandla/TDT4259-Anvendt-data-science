@@ -1,7 +1,8 @@
 import preprocessing
+import math
 import numpy as np
 import pandas as pd
-import math
+import seaborn as sns
 from matplotlib import pyplot as plt
 from sklearn.model_selection import TimeSeriesSplit, train_test_split
 from sklearn.ensemble import RandomForestRegressor
@@ -14,7 +15,7 @@ def random_forest(df, location):
     X = df.drop("consumption", axis=1)
 
     X_train, X_test, y_train, y_test = train_test_split(
-        X, y, test_size=0.3, shuffle=False)
+        X, y, test_size=0.3)
 
     model = RandomForestRegressor(
         n_estimators=100,
@@ -32,15 +33,15 @@ def random_forest(df, location):
     rmse = math.sqrt(mse)
     accuracy = 100 - np.mean(mape)
 
-    # Plotting real vs predicted values for a time period
-    fig = plt.figure(figsize=(16, 8))
-    plt.title(f'Real vs Predicted - {location} - MAE {mae}', fontsize=20)
-    plt.plot(y_test, color='red')
-    plt.plot(pd.Series(predictions, index=y_test.index), color='green')
-    plt.xlabel('Month', fontsize=16)
-    plt.ylabel('Consumption', fontsize=16)
-    plt.legend(labels=['Real', 'Prediction'], fontsize=16)
-    plt.grid()
+    smoother = 0.2
+    plt.figure(figsize=(5, 7))
+    ax = sns.kdeplot(y, color="r", label="Actual values", bw_adjust=smoother)
+    sns.kdeplot(predictions, color="b",
+                label="Predicted values", ax=ax, bw_adjust=smoother)
+    plt.title(
+        f"Kernel Density Estimate of real vs. predicted values for {location}")
+    plt.ylabel("Density of values")
+    plt.legend()
     plt.show()
 
     return f"""+------------ Random Forest: {location} ------------+
