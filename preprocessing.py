@@ -6,9 +6,9 @@ def preprocess(df):
     # Outlier detection using z-score
     # Har oppdaget at det varierende mengder outliers. Oslo har ingen f.eks, mens de fleste andre har ~10 stk.
     z_scores = (df['temperature'] - df['temperature'].mean()) / df['temperature'].std()
-    print(df.shape[0])
+    #print(df.shape[0])
     df = df[(z_scores < 3) & (z_scores > -3)]
-    print(df.shape[0])
+    #print(df.shape[0])
     
     
 
@@ -18,8 +18,11 @@ def preprocess(df):
     df.drop("time", axis=1, inplace=True)
     df.drop("location", axis=1, inplace=True)
     df["hour"] = df.index.hour
-    df["day"] = df.index.day
     df["month"] = df.index.month
+    df['dayofmonth'] = df.index.day
+    df['dayofweek'] = df.index.dayofweek
+    df['quarter'] = df.index.quarter
+    df['dayofyear'] = df.index.dayofyear
     df["temperature"] = bma.moving_average(df["temperature"], 12)
     df["prev_consumption"] = df["consumption"].shift(168)
     df.dropna(how='any', axis=0, inplace=True)
